@@ -23,6 +23,9 @@ pub trait Abyss {
     /// Remove the top bubble.
     /// Returns `None` if there is no top bubble.
     fn pop(&mut self) -> Option<()>;
+    /// Remove the top bubble and in case of a double bubble will also remove all inner bubbles
+    /// Returns `None` if there is no top bubble.
+    fn double_pop(&mut self) -> Option<()>;
     /// Duplicates the top bubble.
     /// Returns `None` if there is no top bubble.
     fn duplicate(&mut self) -> Option<()>;

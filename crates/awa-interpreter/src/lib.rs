@@ -256,6 +256,11 @@ impl<A: Abyss, I: BufRead, O: Write> Interpreter<A, I, O> {
                 Some(false) => return Ok(ContinueAt::SkipNext),
                 None => return Err(Error::NotEnoughBubbles(u5::TWO)),
             },
+            AwaTism::DoublePop => {
+                if self.abyss.double_pop().is_none() {
+                    return Err(Error::NotEnoughBubbles(u5::ONE));
+                }
+            }
         }
         Ok(ContinueAt::Next)
     }

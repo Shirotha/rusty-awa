@@ -49,6 +49,8 @@ pub enum AwaTism {
     LessThan,
     #[discriminant = 0x14]
     GreaterThan,
+    #[discriminant = 0x16]
+    DoublePop,
 }
 impl Display for AwaTism {
     #[inline]
@@ -76,6 +78,7 @@ impl Display for AwaTism {
             Self::EqualTo => f.write_str("eql"),
             Self::LessThan => f.write_str("lss"),
             Self::GreaterThan => f.write_str("gr8"),
+            Self::DoublePop => f.write_str("p0p"),
         }
     }
 }

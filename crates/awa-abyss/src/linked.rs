@@ -742,12 +742,28 @@ impl<T: Value> awa_core::Abyss for Abyss<T> {
                         return Ok(next);
                     }
                 },
+                // SAFETY: top exists by construction
                 None => unreachable!(),
             }
         }
         let Some(top) = self.top else { return Ok(None) };
         self.top = inner(&mut self.arena, top, &mut fun)?;
         Ok(Some(()))
+    }
+    fn double_pop(&mut self) -> Option<()> {
+        self.top = match self.arena.remove(self.top?) {
+            Some(Bubble::Single { next, .. }) => next,
+            Some(Bubble::Double {
+                inner: (inner, _),
+                next,
+            }) => {
+                remove_all(&mut self.arena, inner);
+                next
+            }
+            // SAFETY: top exists by construction
+            None => unreachable!(),
+        };
+        Some(())
     }
 }
 impl<T: Value> Display for Abyss<T> {

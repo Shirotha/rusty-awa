@@ -26,5 +26,5 @@ loop fib
     sbm 3
 end loop fib
 ; abyss: [n1, n2], result
-sbm 0
+p0p
 pr1
