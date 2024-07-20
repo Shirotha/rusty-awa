@@ -1,0 +1,13 @@
+[package]
+name = "awa-interpreter"
+repository.workspace = true
+authors.workspace = true
+edition.workspace = true
+version = "0.1.0"
+
+[dependencies]
+awa-core = { path = "../awa-core" }
+
+thiserror.workspace = true
+num-traits.workspace = true
+fallible-iterator = "0.3.0"

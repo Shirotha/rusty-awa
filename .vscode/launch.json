@@ -1,0 +1,137 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "awa-abyss tests",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--profile=debugger",
+                    "--package=awa-abyss"
+                ],
+                "filter": {
+                    "name": "awa_abyss",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "awa-core tests",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--profile=debugger",
+                    "--package=awa-core"
+                ],
+                "filter": {
+                    "name": "awa_core",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "awa-interpreter tests",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--profile=debugger",
+                    "--package=awa-interpreter"
+                ],
+                "filter": {
+                    "name": "awa_interpreter",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "rusty-awa tests",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--profile=debugger",
+                    "--package=rusty-awa"
+                ],
+                "filter": {
+                    "name": "rusty_awa",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "CLI tests",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=awa",
+                    "--profile=debugger",
+                    "--package=rusty-awa"
+                ],
+                "filter": {
+                    "name": "awa",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "run example",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=awa",
+                    "--profile=debugger",
+                    "--package=rusty-awa"
+                ],
+                "filter": {
+                    "name": "awa",
+                    "kind": "bin"
+                }
+            },
+            "args": ["run", "${input:example}"],
+            "cwd": "${workspaceFolder}"
+        },
+    ],
+    "inputs": [
+        {
+            "id": "example",
+            "type": "command",
+            "command": "extension.commandvariable.file.pickFile",
+            "args": {
+                "description": "name of example file to run",
+                "fromFolder": {
+                    "fixed": "${workspaceFolder}/examples"
+                }
+            }
+        }
+    ]
+}

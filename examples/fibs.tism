@@ -1,0 +1,30 @@
+blo 1
+blo 0
+srn 2
+dpl
+blo "input count; ", 13
+prn
+r3d
+
+; abyss: count, [n1, n2], result
+fib = 0
+loop fib
+    ; abyss: i, count, [n1, n2], result
+    sbm 0, 2
+    pop
+    sbm 1
+    dpl
+    sbm 2
+    4dd
+    ; abyss: n3, n2, result, i, count
+    dpl
+    sbm 3
+    sbm 1
+    srn 2
+    sbm 4
+    mrg
+    sbm 3
+end loop fib
+; abyss: [n1, n2], result
+sbm 0
+pr1
