@@ -9,10 +9,13 @@ version = "0.1.0"
 default = ["default_linked"]
 # store count in double bubbles when using linked lists
 cache_count = []
-# import ::linked into the root namespace
+# use linked::Abyss as default
 default_linked = []
+# use Buffered<linked::Abyss> as default
+default_buffered-linked = []
 
 [dependencies]
 awa-core = { path = "../awa-core" }
 
 num-traits.workspace = true
+cfg-if = "1.0.0"

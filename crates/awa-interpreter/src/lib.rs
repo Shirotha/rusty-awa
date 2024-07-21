@@ -186,7 +186,7 @@ impl<A: Abyss, I: BufRead, O: Write> Interpreter<A, I, O> {
                 }
             }
             AwaTism::Submerge(distance) => {
-                if self.abyss.submerge(distance).is_none() {
+                if self.abyss.submerge((*distance) as usize).is_none() {
                     return Err(Error::NotEnoughBubbles(distance));
                 }
             }
@@ -201,7 +201,7 @@ impl<A: Abyss, I: BufRead, O: Write> Interpreter<A, I, O> {
                 }
             }
             AwaTism::Surround(count) => {
-                if self.abyss.surround(count).is_none() {
+                if self.abyss.surround((*count) as usize).is_none() {
                     return Err(Error::NotEnoughBubbles(count));
                 }
             }

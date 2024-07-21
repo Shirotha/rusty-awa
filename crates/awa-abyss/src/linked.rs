@@ -1,6 +1,6 @@
 use std::{fmt::Display, mem::replace};
 
-use awa_core::{u5, Value};
+use awa_core::Value;
 use num_traits::{cast, Zero};
 
 use crate::{Arena, Index};
@@ -159,6 +159,10 @@ impl<T: Value> Default for Abyss<T> {
 }
 impl<T: Value> awa_core::Abyss for Abyss<T> {
     type Value = T;
+    #[inline(always)]
+    fn is_empty(&self) -> bool {
+        self.top.is_none()
+    }
     #[inline]
     fn blow_awascii<B>(&mut self, awascii: B) -> Option<()>
     where
@@ -203,13 +207,12 @@ impl<T: Value> awa_core::Abyss for Abyss<T> {
         Some(())
     }
     #[inline]
-    fn submerge(&mut self, distance: u5) -> Option<()> {
+    fn submerge(&mut self, distance: usize) -> Option<()> {
         let first = self.top?;
         let count = if distance.is_zero() {
             usize::MAX
         } else {
-            // SAFETY: unwrap: usize is wider than u5
-            cast(distance).unwrap()
+            distance
         };
         let (before, _) = move_next(&self.arena, first, count);
         let after = replace(self.arena[before].next_mut(), Some(first));
@@ -240,14 +243,13 @@ impl<T: Value> awa_core::Abyss for Abyss<T> {
         Some(())
     }
     #[inline]
-    fn surround(&mut self, count: u5) -> Option<()> {
+    fn surround(&mut self, count: usize) -> Option<()> {
         if count.is_zero() {
             return Some(());
         }
         let first = self.top?;
-        // SAFETY: unwrap: usize is always wider than u5
         #[cfg_attr(not(feature = "cache_count"), allow(unused_variables))]
-        let (last, count) = move_next(&self.arena, first, cast::<_, usize>(count).unwrap() - 1);
+        let (last, count) = move_next(&self.arena, first, count - 1);
         let bubble = Bubble::Double {
             inner: (first, last),
             next: self.arena[last].next_mut().take(),
@@ -756,6 +758,7 @@ impl<T: Value> awa_core::Abyss for Abyss<T> {
             Some(Bubble::Double {
                 inner: (inner, _),
                 next,
+                ..
             }) => {
                 remove_all(&mut self.arena, inner);
                 next

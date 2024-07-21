@@ -235,7 +235,7 @@ impl Commands {
                 output.write(source, &program)?;
             }
             Self::Run { source, verbose } => {
-                let (program, abyss) = (source.read::<BigEndian>()?, Abyss::<isize>::new());
+                let (program, abyss) = (source.read::<BigEndian>()?, Abyss::<isize>::default());
                 let mut interpreter = Interpreter::new(abyss, BufReader::new(stdin()), stdout());
                 if *verbose {
                     let digits = (program.len() as f64).log10().trunc() as usize + 1;
@@ -252,7 +252,7 @@ impl Commands {
                 }
             }
             Self::Debug { source } => {
-                let (program, abyss) = (source.read::<BigEndian>()?, Abyss::<isize>::new());
+                let (program, abyss) = (source.read::<BigEndian>()?, Abyss::<isize>::default());
                 let mut interpreter = Interpreter::new(abyss, BufReader::new(stdin()), stdout());
                 let mut cursor = Cursor::new(&program);
                 let digits = (program.len() as f64).log10().trunc() as usize + 1;
