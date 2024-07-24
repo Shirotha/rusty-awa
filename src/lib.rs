@@ -10,7 +10,8 @@ use awa_core::{
     load_awatalk, Assembler, AwaTism, BigEndian, BitError, BitReadBuffer, BitWriteStream,
     Endianness, ParseError, Program,
 };
-use awa_interpreter::{Cursor, Error as RuntimeError, FallibleIterator, Interpreter};
+use awa_debug::{Debugger, Error as DebugError};
+use awa_interpreter::{Error as RuntimeError, FallibleIterator, Interpreter};
 
 use clap::{Args, Parser, Subcommand, ValueEnum, ValueHint};
 use thiserror::Error;
@@ -23,6 +24,8 @@ pub enum Error {
     InputFromTerminal,
     #[error("failed to assemble program")]
     AssemblyFailed,
+    #[error("debugger failed")]
+    DebugError(#[from] DebugError),
     #[error(transparent)]
     ParseError(#[from] ParseError),
     #[error(transparent)]
@@ -211,9 +214,26 @@ pub enum Commands {
         verbose: bool,
     },
     /// Debug program from file or stdin.
-    ///
-    /// Will advance one instruction at time while printing instructions and abyss.
-    #[command(arg_required_else_help = true)]
+    #[command(
+        arg_required_else_help = true,
+        long_about = "
+Debug program from file or stdin.
+
+Commands
+- s:      advance a single step (default)
+- s N:    advance N steps
+- r:      continue executing until interrupted
+- b:      set breakpoint at current line
+- b N:    set breakpoint at line N
+- b +/-N: set breakpoint relative from current line
+- q:      quit
+
+Shortcuts
+- Tab/Shift-Tab: switch tabs
+- Ctrl-j/Ctrl-k: scroll view
+- Ctrl-h/Ctrl-l: scroll instructions
+- Ctrl-c:        quit"
+    )]
     Debug {
         #[command(flatten)]
         source: Source,
@@ -253,22 +273,8 @@ impl Commands {
             }
             Self::Debug { source } => {
                 let (program, abyss) = (source.read::<BigEndian>()?, Abyss::<isize>::default());
-                let mut interpreter = Interpreter::new(abyss, BufReader::new(stdin()), stdout());
-                let mut cursor = Cursor::new(&program);
-                let digits = (program.len() as f64).log10().trunc() as usize + 1;
-                while let Some((pc, awatism)) = cursor.current() {
-                    let str = format!("{}", interpreter.abyss());
-                    for line in str.lines().rev() {
-                        eprintln!("| {}", line);
-                    }
-                    eprint!("^\n{0:>1$} {2}\n> ", pc + 1, digits, awatism);
-                    stdin().read_line(&mut String::new())?;
-                    cursor.next(&mut interpreter)?;
-                    if matches!(awatism, AwaTism::Print) {
-                        stdout().flush()?;
-                        eprintln!();
-                    }
-                }
+                let mut debugger = Debugger::new(&program, abyss);
+                debugger.run()?;
             }
         }
         Ok(())

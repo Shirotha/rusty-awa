@@ -71,6 +71,14 @@ impl<'a> Cursor<'a> {
             pc: Some(0),
         }
     }
+    #[inline(always)]
+    pub fn len(&self) -> usize {
+        self.program.len()
+    }
+    #[inline(always)]
+    pub fn is_empty(&self) -> bool {
+        self.program.is_empty()
+    }
     #[inline]
     pub fn next<A, I, O>(&mut self, interpreter: &mut Interpreter<A, I, O>) -> Result<bool, Error>
     where

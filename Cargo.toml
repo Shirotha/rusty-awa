@@ -32,6 +32,7 @@ path = "src/main.rs"
 awa-core = { path = "crates/awa-core" }
 awa-abyss = { path = "crates/awa-abyss" }
 awa-interpreter = { path = "crates/awa-interpreter" }
+awa-debug = { path = "crates/awa-debug" }
 
 thiserror.workspace = true
 clap = { version = "4.5.9", features = ["default", "derive"] }

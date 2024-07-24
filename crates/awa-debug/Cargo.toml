@@ -1,0 +1,15 @@
+[package]
+name = "awa-debug"
+version = "0.1.0"
+authors.workspace = true
+repository.workspace = true
+edition.workspace = true
+
+[dependencies]
+awa-core = { path = "../awa-core" }
+awa-interpreter = { path = "../awa-interpreter" }
+parking_lot = "0.12.3"
+
+ratatui = { version = "0.27.0", features = ["unstable-widget-ref"] }
+thiserror.workspace = true
+tui-input = "0.9.0"

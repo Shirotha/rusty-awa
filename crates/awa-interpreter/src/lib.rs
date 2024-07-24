@@ -20,7 +20,7 @@ pub enum Error {
     IOError(#[from] IOError),
     #[error("expect input to be a number")]
     NoNumber,
-    #[error("expected the abyss to have at least {0} bubbles")]
+    #[error("expected the abyss to have at least {0} bubble(s)")]
     NotEnoughBubbles(u5),
     #[error("abyss is full")]
     NoSpace,
@@ -97,6 +97,23 @@ impl<A: Abyss, I: BufRead, O: Write> Interpreter<A, I, O> {
             iobuffer: String::new(),
             awabuffer: Vec::new(),
         }
+    }
+    #[inline]
+    pub fn redirect<I2: BufRead, O2: Write>(
+        self,
+        input: I2,
+        output: O2,
+    ) -> (Interpreter<A, I2, O2>, (I, O)) {
+        (
+            Interpreter {
+                abyss: self.abyss,
+                input,
+                output,
+                iobuffer: self.iobuffer,
+                awabuffer: self.awabuffer,
+            },
+            (self.input, self.output),
+        )
     }
     #[inline(always)]
     pub fn run<'a>(&'a mut self, program: &'a Program) -> Iter<'a, A, I, O> {

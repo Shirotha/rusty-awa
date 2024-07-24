@@ -120,6 +120,31 @@
             "args": ["run", "${input:example}"],
             "cwd": "${workspaceFolder}"
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "debug example",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=awa",
+                    "--profile=debugger",
+                    "--package=rusty-awa"
+                ],
+                "filter": {
+                    "name": "awa",
+                    "kind": "bin"
+                }
+            },
+            "args": ["debug", "${input:example}"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "attach",
+            "name": "attach",
+            "pid":"${command:pickProcess}"
+        }
     ],
     "inputs": [
         {
