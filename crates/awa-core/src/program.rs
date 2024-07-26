@@ -26,6 +26,20 @@ impl Program {
         }
     }
     #[inline]
+    pub fn from_vec(instructions: Vec<AwaTism>) -> Self {
+        let mut labels = Box::new([None; 32]);
+        for (pc, awatism) in instructions.iter().enumerate() {
+            if let AwaTism::Label(label) = awatism {
+                // SAFETY: pc + 1 can never be zero
+                labels[**label as usize] = Some(unsafe { NonZero::new_unchecked(pc + 1) });
+            }
+        }
+        Self {
+            instructions,
+            labels,
+        }
+    }
+    #[inline]
     pub fn from_bitbuffer(buffer: BitReadBuffer<impl Endianness>) -> Result<Self, BitError> {
         let (mut stream, mut program) = (BitReadStream::new(buffer), Self::new());
         loop {

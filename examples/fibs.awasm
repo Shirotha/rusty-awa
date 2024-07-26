@@ -2,15 +2,19 @@ blo 1
 blo 0
 srn 2
 dpl
-blo "input count; ", 13
+!str "input count; "
 prn
 r3d
 
 ; abyss: count, [n1, n2], result
-fib = 0
-loop fib
+; loop 0
+blo 0
+lbl 0
+blo 1
+4dd
     ; abyss: i, count, [n1, n2], result
-    sbm 0, 2
+    sbm 0
+    sbm 0
     pop
     sbm 1
     dpl
@@ -24,7 +28,11 @@ loop fib
     sbm 4
     mrg
     sbm 3
-end loop fib
+    ; end loop 0
+    lss
+    jmp 0
+pop
+pop
 ; abyss: [n1, n2], result
 p0p
 pr1

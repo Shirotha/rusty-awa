@@ -6,9 +6,10 @@ use std::{
 };
 
 use awa_abyss::Abyss;
+use awa_asm::{load_program, MacroTable};
 use awa_core::{
-    load_awatalk, Assembler, AwaTism, BigEndian, BitError, BitReadBuffer, BitWriteStream,
-    Endianness, ParseError, Program,
+    load_awatalk, AwaTism, BigEndian, BitError, BitReadBuffer, BitWriteStream, Endianness,
+    ParseError, Program,
 };
 use awa_debug::{Debugger, Error as DebugError};
 use awa_interpreter::{Error as RuntimeError, FallibleIterator, Interpreter};
@@ -23,7 +24,7 @@ pub enum Error {
     #[error("can't read source code from a terminal input")]
     InputFromTerminal,
     #[error("failed to assemble program")]
-    AssemblyFailed,
+    AssemblyFailed(#[from] awa_asm::Error),
     #[error("debugger failed")]
     DebugError(#[from] DebugError),
     #[error(transparent)]
@@ -42,8 +43,8 @@ pub enum SourceFormat {
     /// use " Awa" and "wa" to represent bits (alias: awa)
     #[value(name = "awatalk", alias = "awa")]
     AwaTalk,
-    /// assembly code (alias: tism)
-    #[value(name = "awatism", alias = "tism")]
+    /// assembly code (alias: awasm)
+    #[value(name = "awatism", alias = "awasm")]
     AwaTism,
     /// bits packed into binary (alias: bin)
     #[value(alias = "bin")]
@@ -54,7 +55,7 @@ impl SourceFormat {
     pub fn from_extension(name: impl AsRef<str>) -> Option<Self> {
         match name.as_ref() {
             "awa" => Some(Self::AwaTalk),
-            "tism" => Some(Self::AwaTism),
+            "awasm" => Some(Self::AwaTism),
             "bin" => Some(Self::Binary),
             _ => None,
         }
@@ -110,13 +111,8 @@ impl Source {
                 Program::from_bitbuffer_with_length(raw, length)?
             }
             SourceFormat::AwaTism => {
-                let mut assembler = Assembler::new();
-                let (result, report) = assembler.assemble::<E>(buffer);
-                report.print_all(&mut stdout(), assembler.fileserver(), true);
-                let Some((raw, length)) = result else {
-                    return Err(Error::AssemblyFailed);
-                };
-                Program::from_bitbuffer_with_length(raw, length)?
+                let macros = MacroTable::default();
+                load_program(&self.file, &buffer, &macros)?
             }
             SourceFormat::Binary => {
                 let raw = BitReadBuffer::new(&buffer, E::endianness());

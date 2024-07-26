@@ -13,6 +13,8 @@ edition = "2021"
 thiserror = "1.0.61"
 bitbuffer = "0.11.0"
 num-traits = "0.2.19"
+parking_lot = "0.12.3"
+rayon = "1.10.0"
 
 
 
@@ -31,6 +33,7 @@ path = "src/main.rs"
 [dependencies]
 awa-core = { path = "crates/awa-core" }
 awa-abyss = { path = "crates/awa-abyss" }
+awa-asm = { path = "crates/awa-asm" }
 awa-interpreter = { path = "crates/awa-interpreter" }
 awa-debug = { path = "crates/awa-debug" }
 

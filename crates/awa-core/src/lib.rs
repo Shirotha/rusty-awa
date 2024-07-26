@@ -17,8 +17,8 @@ mod awascii;
 pub use awascii::*;
 mod abyss;
 pub use abyss::*;
-mod asm;
-pub use asm::*;
+mod awatalk;
+pub use awatalk::*;
 mod program;
 pub use program::*;
 

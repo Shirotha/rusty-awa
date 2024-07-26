@@ -1,0 +1,11 @@
+[package]
+name = "awa-asm"
+version = "0.1.0"
+authors.workspace = true
+repository.workspace = true
+edition.workspace = true
+
+[dependencies]
+awa-core = { path = "../awa-core" }
+
+thiserror.workspace = true

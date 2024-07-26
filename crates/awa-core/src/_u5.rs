@@ -6,6 +6,7 @@ use std::{
     fmt::Display,
     num::IntErrorKind,
     ops::{Add, Deref, Div, Mul, Rem, Sub},
+    str::FromStr,
 };
 
 use crate::Error;
@@ -34,6 +35,13 @@ impl TryFrom<u8> for u5 {
         }
         // SAFETY: value fits into 5 bits here
         Ok(unsafe { Self(value) })
+    }
+}
+impl FromStr for u5 {
+    type Err = Error;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let value = s.parse::<u8>()?;
+        Self::try_from(value)
     }
 }
 impl Deref for u5 {
